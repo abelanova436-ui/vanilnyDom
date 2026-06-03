@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Фикс админ панели</title>
+</head>
+
+<body>
+    <h1>Фиксим админ панель</h1>
+    <button onclick="fixAdmin()">Исправить админ доступ</button>
+    <button onclick="clearAll()">Очистить всё</button>
+
+    <script>
+        function fixAdmin() {
+            // Создаем админа
+            const adminUser = {
+                id: 0,
+                name: 'Администратор',
+                email: 'admin@vanilniydom.ru',
+                phone: '+7 (495) 123-45-67',
+                bonuses: 0,
+                orders: 0,
+                registrationDate: '2020-01-01',
+                newsletter: false,
+                role: 'admin'
+            };
+
+            // Сохраняем
+            localStorage.setItem('vanillaHouseCurrentUser', JSON.stringify(adminUser));
+
+            // Добавляем в список пользователей
+            let users = JSON.parse(localStorage.getItem('vanillaHouseUsers') || '[]');
+            const adminExists = users.some(u => u.email === 'admin@vanilniydom.ru');
+            if (!adminExists) {
+                users.push({
+                    ...adminUser,
+                    password: 'admin123'
+                });
+                localStorage.setItem('vanillaHouseUsers', JSON.stringify(users));
+            }
+
+            alert('Админ создан! Теперь можно войти с:\nEmail: admin@vanilniydom.ru\nПароль: admin123');
+            window.location.href = 'login.html';
+        }
+
+        function clearAll() {
+            localStorage.clear();
+            sessionStorage.clear();
+            alert('Все данные очищены');
+        }
+    </script>
+</body>
+
+</html>

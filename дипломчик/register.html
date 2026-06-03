@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - Ванильный дом</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== ОСНОВНЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #7B3F00;
+            --secondary-color: #D4A76A;
+            --accent-color: #FF9E6D;
+            --light-bg: #FFFDF5;
+            --text-dark: #3A2615;
+            --text-light: #8B7355;
+            --border-radius: 20px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, #FFF9F0 0%, #FFFDF5 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            border-radius: calc(var(--border-radius) + 4px);
+            z-index: -1;
+            opacity: 0.7;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 20px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+
+        .logo h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+
+        .auth-card h2 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-family: inherit;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(212, 167, 106, 0.2);
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .input-with-icon .form-control {
+            padding-left: 50px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .checkbox input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            margin-top: 3px;
+        }
+
+        .checkbox span {
+            line-height: 1.4;
+        }
+
+        .checkbox a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .checkbox a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-block {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            font-size: 1.1rem;
+        }
+
+        .auth-footer {
+            text-align: center;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            margin-top: 30px;
+        }
+
+        .auth-footer p {
+            color: var(--text-light);
+        }
+
+        .auth-footer a {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* Benefits */
+        .benefits {
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #FFF9F0, white);
+            border-radius: var(--border-radius);
+            border: 2px solid var(--secondary-color);
+        }
+
+        .benefits h3 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+
+        .benefits ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .benefits ul {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .benefits li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .benefits li i {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            width: 30px;
+            height: 30px;
+            background: #FFF9F0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px 25px;
+            box-shadow: var(--shadow-hover);
+            display: none;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.success {
+            border-left-color: #10B981;
+        }
+
+        .notification.error {
+            border-left-color: #EF4444;
+        }
+
+        .notification.warning {
+            border-left-color: #F59E0B;
+        }
+
+        .notification i {
+            font-size: 1.5rem;
+        }
+
+        .notification.success i {
+            color: #10B981;
+        }
+
+        .notification.error i {
+            color: #EF4444;
+        }
+
+        .notification.warning i {
+            color: #F59E0B;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 30px 20px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 20px 15px;
+            }
+            
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+            
+            .auth-card h2 {
+                font-size: 1.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <a href="index.html" class="back-home">
+            <i class="fas fa-arrow-left"></i> На главную
+        </a>
+        
+        <div class="auth-header">
+            <div class="logo">
+                <img src="https://psv4.userapi.com/s/v1/d2/Vgm_zT2yDUU5r16TuH-ECm51SRnVj6TGqm5x1YXPyC0j9X26UfP2cd3_gVw-6ReEnJ1BUOCJlp1RrkR9zwFDXtngwMxsj_GgnkBRhXWV4MC03FSYKL3ySq3-UDkLzCsnjg48scr10vnY/diplom_2.png" alt="Логотип Ванильный дом">
+                <h1>Ванильный дом</h1>
+            </div>
+        </div>
+        
+        <div class="auth-card">
+            <h2>Регистрация</h2>
+            <p class="subtitle">Создайте аккаунт и получите 200 бонусов на первый заказ!</p>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="name">Имя и фамилия</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="name" class="form-control" placeholder="Иван Иванов" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" class="form-control" placeholder="ivan@example.com" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Телефон</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="phone" class="form-control" placeholder="+7 (999) 999-99-99" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Пароль</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" class="form-control" placeholder="Минимум 6 символов" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Подтвердите пароль</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="confirmPassword" class="form-control" placeholder="Повторите пароль" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <span>Я соглашаюсь с <a href="#">Условиями использования</a> и <a href="#">Политикой конфиденциальности</a></span>
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox">
+                        <input type="checkbox" id="newsletter" checked>
+                        <span>Получать информацию об акциях и новых десертах</span>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-block">Зарегистрироваться</button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Уже есть аккаунт? <a href="login.html">Войдите</a></p>
+            </div>
+        </div>
+        
+        <div class="benefits">
+            <h3>Преимущества регистрации</h3>
+            <ul>
+                <li><i class="fas fa-gift"></i> <span>200 бонусов на первый заказ</span></li>
+                <li><i class="fas fa-history"></i> <span>История всех заказов</span></li>
+                <li><i class="fas fa-map-marker-alt"></i> <span>Сохранение адресов доставки</span></li>
+                <li><i class="fas fa-percentage"></i> <span>Специальные акции и скидки</span></li>
+                <li><i class="fas fa-star"></i> <span>Программа лояльности</span></li>
+                <li><i class="fas fa-bolt"></i> <span>Быстрое оформление заказов</span></li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Маска для телефона
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.startsWith('7') || value.startsWith('8')) {
+                value = value.substring(1);
+            }
+            
+            if (value.length > 0) {
+                value = value.substring(0, 10);
+                let formattedValue = '+7';
+                
+                if (value.length > 0) {
+                    formattedValue += ' (' + value.substring(0, 3);
+                }
+                if (value.length >= 4) {
+                    formattedValue += ') ' + value.substring(3, 6);
+                }
+                if (value.length >= 7) {
+                    formattedValue += '-' + value.substring(6, 8);
+                }
+                if (value.length >= 9) {
+                    formattedValue += '-' + value.substring(8, 10);
+                }
+                
+                e.target.value = formattedValue;
+            }
+        });
+
+        // Уведомления
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'flex';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Проверка email
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // Проверка пароля
+        function isValidPassword(password) {
+            return password.length >= 6;
+        }
+
+        // Проверка телефона
+        function isValidPhone(phone) {
+            const phoneDigits = phone.replace(/\D/g, '');
+            return phoneDigits.length === 11 || phoneDigits.length === 10;
+        }
+
+        // Обработка формы регистрации
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+            const newsletter = document.getElementById('newsletter').checked;
+            
+            // Валидация
+            if (!name) {
+                showNotification('Введите имя и фамилию', 'error');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                showNotification('Введите корректный email', 'error');
+                return;
+            }
+            
+            if (!isValidPhone(phone)) {
+                showNotification('Введите корректный номер телефона', 'error');
+                return;
+            }
+            
+            if (!isValidPassword(password)) {
+                showNotification('Пароль должен быть не менее 6 символов', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification('Пароли не совпадают', 'error');
+                return;
+            }
+            
+            if (!agreeTerms) {
+                showNotification('Необходимо согласиться с условиями', 'error');
+                return;
+            }
+            
+            // Получаем существующих пользователей
+            let users = [];
+            try {
+                users = JSON.parse(localStorage.getItem('vanillaHouseUsers') || '[]');
+            } catch (e) {
+                users = [];
+            }
+            
+            // Проверяем, нет ли уже пользователя с таким email
+            if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+                showNotification('Пользователь с таким email уже существует', 'error');
+                return;
+            }
+            
+            // Проверяем, нет ли уже пользователя с таким телефоном
+            const phoneDigits = phone.replace(/\D/g, '');
+            if (users.some(u => u.phone.replace(/\D/g, '') === phoneDigits)) {
+                showNotification('Пользователь с таким телефоном уже существует', 'error');
+                return;
+            }
+            
+            // Создаем объект пользователя (без хранения пароля в открытом виде - для продакшена нужно хэшировать)
+            const userData = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                phone: phone,
+                password: password, // ВНИМАНИЕ: Для безопасности в реальном проекте пароль нужно хэшировать!
+                bonuses: 200,
+                orders: [],
+                addresses: [],
+                registrationDate: new Date().toISOString(),
+                newsletter: newsletter,
+                role: 'user'
+            };
+            
+            // Сохраняем пользователя
+            users.push(userData);
+            localStorage.setItem('vanillaHouseUsers', JSON.stringify(users));
+            
+            // Автоматически логиним
+            const currentUser = {
+                id: userData.id,
+                name: userData.name,
+                email: userData.email,
+                phone: userData.phone,
+                bonuses: userData.bonuses,
+                registrationDate: userData.registrationDate,
+                newsletter: userData.newsletter,
+                role: userData.role
+            };
+            
+            localStorage.setItem('vanillaHouseCurrentUser', JSON.stringify(currentUser));
+            
+            // Создаем начальные данные для пользователя
+            initializeUserData(userData.id);
+            
+            showNotification('Регистрация успешна! 200 бонусов начислены на ваш счет.', 'success');
+            
+            // Редирект в личный кабинет
+            setTimeout(() => {
+                window.location.href = 'profile-index.html';
+            }, 1500);
+        });
+
+        // Функция инициализации данных пользователя
+        function initializeUserData(userId) {
+            // Инициализируем историю бонусов
+            let bonusesHistory = JSON.parse(localStorage.getItem('vanillaHouseBonusesHistory') || '[]');
+            bonusesHistory.push({
+                userId: userId,
+                type: 'registration',
+                amount: 200,
+                description: 'Бонусы за регистрацию',
+                date: new Date().toISOString()
+            });
+            localStorage.setItem('vanillaHouseBonusesHistory', JSON.stringify(bonusesHistory));
+            
+            // Инициализируем корзину
+            let carts = JSON.parse(localStorage.getItem('vanillaHouseCarts') || '{}');
+            carts[userId] = [];
+            localStorage.setItem('vanillaHouseCarts', JSON.stringify(carts));
+            
+            // Инициализируем избранное
+            let favorites = JSON.parse(localStorage.getItem('vanillaHouseFavorites') || '{}');
+            favorites[userId] = [];
+            localStorage.setItem('vanillaHouseFavorites', JSON.stringify(favorites));
+        }
+    </script>
+</body>
+</html>

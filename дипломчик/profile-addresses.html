@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Адреса - Личный кабинет</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== ОСНОВНЫЕ СТИЛИ ЛК ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #7B3F00;
+            --secondary-color: #D4A76A;
+            --accent-color: #FF9E6D;
+            --light-bg: #FFFDF5;
+            --text-dark: #3A2615;
+            --text-light: #8B7355;
+            --border-radius: 20px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .profile-sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 30px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .back-to-site {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .user-details h3 {
+            margin-bottom: 5px;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .user-details p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .user-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #FFF9F0;
+            color: var(--primary-color);
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .sidebar-nav a:hover {
+            background: #f8f9fa;
+            color: var(--primary-color);
+        }
+
+        .sidebar-nav li.active a {
+            background: linear-gradient(90deg, rgba(123, 63, 0, 0.1), transparent);
+            color: var(--primary-color);
+            border-right: 3px solid var(--primary-color);
+        }
+
+        .sidebar-nav a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .badge {
+            margin-left: auto;
+            background: var(--accent-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .divider {
+            height: 1px;
+            background: #eee;
+            margin: 20px 0;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .profile-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+            max-width: calc(100% - 280px);
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .content-header h1 {
+            color: var(--primary-color);
+            font-size: 2.2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline::before {
+            display: none;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+
+        /* Sections */
+        .section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        /* Addresses */
+        .addresses-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .address-card {
+            border: 2px solid #eee;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .address-card.default {
+            border-color: var(--primary-color);
+            background: #FFF9F0;
+        }
+
+        .address-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .address-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .address-header h4 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .address-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border: none;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-icon:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #EF4444;
+        }
+
+        .address-details {
+            margin-bottom: 20px;
+        }
+
+        .address-details p {
+            margin-bottom: 5px;
+            color: var(--text-light);
+        }
+
+        .address-footer {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        /* Settings */
+        .settings-card {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .setting-info h4 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .setting-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .setting-control {
+            min-width: 200px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-family: inherit;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(212, 167, 106, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Zones */
+        .zones-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .zone-card {
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            background: white;
+        }
+
+        .zone-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .zone-card p {
+            color: var(--text-light);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .zone-card small {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        .text-success {
+            color: #10B981 !important;
+        }
+
+        .text-warning {
+            color: #F59E0B !important;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            color: var(--accent-color);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px 25px;
+            box-shadow: var(--shadow-hover);
+            display: none;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.success {
+            border-left-color: #10B981;
+        }
+
+        .notification.error {
+            border-left-color: #EF4444;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .addresses-grid,
+            .zones-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .profile-sidebar {
+                width: 250px;
+            }
+            
+            .profile-content {
+                margin-left: 250px;
+                max-width: calc(100% - 250px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .profile-sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+            }
+            
+            .profile-content {
+                margin-left: 0;
+                max-width: 100%;
+            }
+            
+            .addresses-grid,
+            .zones-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .setting-item {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .setting-control {
+                min-width: 100%;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-content {
+                padding: 20px 15px;
+            }
+            
+            .content-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .address-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .address-actions {
+                align-self: flex-end;
+            }
+            
+            .address-footer {
+                flex-direction: column;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="profile-sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="back-to-site">
+                <i class="fas fa-arrow-left"></i> На сайт
+            </a>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">А</div>
+                <div class="user-details">
+                    <h3 id="userName">Анна Петрова</h3>
+                    <p id="userEmail">anna@example.com</p>
+                    <span class="user-status"><i class="fas fa-crown"></i> Gold статус</span>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="profile-index.html">
+                        <i class="fas fa-home"></i>
+                        <span>Обзор</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile-orders.html">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>Мои заказы</span>
+                        <span class="badge">5</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile-bonuses.html">
+                        <i class="fas fa-gift"></i>
+                        <span>Бонусы</span>
+                        <span class="badge">150</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="profile-addresses.html">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Адреса</span>
+                        <span class="badge" id="addressesCount">2</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile-promotions.html">
+                        <i class="fas fa-percentage"></i>
+                        <span>Акции</span>
+                        <span class="badge">3</span>
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="#" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Выйти</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="profile-content">
+        <div class="content-header">
+            <h1>Адреса доставки</h1>
+            <div class="header-actions">
+                <button class="btn" onclick="showAddAddressModal()">
+                    <i class="fas fa-plus"></i> Добавить адрес
+                </button>
+            </div>
+        </div>
+        
+        <!-- Address List -->
+        <div class="section">
+            <h2>Сохраненные адреса</h2>
+            <div class="addresses-grid" id="addressesList">
+                <!-- Адреса загружаются через JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Delivery Settings -->
+        <div class="section">
+            <h2>Настройки доставки</h2>
+            <div class="settings-card">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h4>Предпочтительное время доставки</h4>
+                        <p>Выберите удобное время для доставки заказов</p>
+                    </div>
+                    <div class="setting-control">
+                        <select id="preferredTime" class="form-control">
+                            <option value="any">Любое время</option>
+                            <option value="morning">Утро (9:00-12:00)</option>
+                            <option value="day">День (12:00-18:00)</option>
+                            <option value="evening" selected>Вечер (18:00-22:00)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h4>Инструкции для курьера</h4>
+                        <p>Особые указания для доставки</p>
+                    </div>
+                    <div class="setting-control">
+                        <textarea id="courierInstructions" class="form-control" 
+                                  placeholder="Например: позвонить заранее, оставить у двери"></textarea>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h4>Уведомления о доставке</h4>
+                        <p>Получать SMS-уведомления о статусе доставки</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="switch">
+                            <input type="checkbox" id="smsNotifications" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="saveDeliverySettings()">
+                    Сохранить настройки
+                </button>
+            </div>
+        </div>
+        
+        <!-- Delivery Zones -->
+        <div class="section">
+            <h2>Зоны доставки</h2>
+            <div class="zones-info">
+                <div class="zone-card">
+                    <h4><i class="fas fa-check-circle text-success"></i> Центр города</h4>
+                    <p>Бесплатная доставка от 1000 рублей</p>
+                    <small>Время доставки: 30-45 минут</small>
+                </div>
+                <div class="zone-card">
+                    <h4><i class="fas fa-check-circle text-success"></i> Спальные районы</h4>
+                    <p>Бесплатная доставка от 1500 рублей</p>
+                    <small>Время доставки: 45-60 минут</small>
+                </div>
+                <div class="zone-card">
+                    <h4><i class="fas fa-info-circle text-warning"></i> Пригород</h4>
+                    <p>Доставка от 300 рублей</p>
+                    <small>Время доставки: 60-90 минут</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal для добавления адреса -->
+    <div class="modal" id="addAddressModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Добавить новый адрес</h3>
+                <button class="close-modal" onclick="closeAddAddressModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addAddressForm">
+                    <div class="form-group">
+                        <label for="addressName">Название адреса</label>
+                        <input type="text" id="addressName" class="form-control" 
+                               placeholder="Например: Дом, Работа" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">Город</label>
+                            <input type="text" id="city" class="form-control" value="Москва" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="street">Улица</label>
+                            <input type="text" id="street" class="form-control" 
+                                   placeholder="Улица, проспект" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="house">Дом</label>
+                            <input type="text" id="house" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="apartment">Квартира/Офис</label>
+                            <input type="text" id="apartment" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="entrance">Подъезд</label>
+                        <input type="text" id="entrance" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="floor">Этаж</label>
+                        <input type="number" id="floor" class="form-control" min="1" max="50">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="intercom">Код домофона</label>
+                        <input type="text" id="intercom" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox">
+                            <input type="checkbox" id="setAsDefault">
+                            <span>Сделать основным адресом доставки</span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="closeAddAddressModal()">
+                            Отмена
+                        </button>
+                        <button type="submit" class="btn">
+                            Сохранить адрес
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Проверка авторизации
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedUser = localStorage.getItem('vanillaHouseUser');
+            
+            if (!savedUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            loadAddresses();
+            loadDeliverySettings();
+        });
+        
+        // Уведомления
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'flex';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        function loadUserData() {
+            const savedUser = localStorage.getItem('vanillaHouseUser');
+            if (savedUser) {
+                const user = JSON.parse(savedUser);
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+                document.getElementById('addressesCount').textContent = user.addresses ? user.addresses.length : 0;
+            }
+        }
+        
+        function loadAddresses() {
+            const savedUser = localStorage.getItem('vanillaHouseUser');
+            if (!savedUser) return;
+            
+            const user = JSON.parse(savedUser);
+            const addressesList = document.getElementById('addressesList');
+            
+            loadUserData();
+            
+            if (!user.addresses || user.addresses.length === 0) {
+                addressesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Нет сохраненных адресов</h3>
+                        <p>Добавьте адрес для быстрого оформления заказов</p>
+                        <button class="btn" onclick="showAddAddressModal()">
+                            <i class="fas fa-plus"></i> Добавить первый адрес
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            addressesList.innerHTML = user.addresses.map((address, index) => `
+                <div class="address-card ${address.isDefault ? 'default' : ''}">
+                    
+                    
+                    <div class="address-header">
+                        <h4>${address.name}</h4>
+                        <div class="address-actions">
+                            <button class="btn-icon" onclick="editAddress(${index})" title="Редактировать">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon btn-danger" onclick="deleteAddress(${index})" title="Удалить">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="address-details">
+                        <p>${address.city}, ${address.street}, д. ${address.house}</p>
+                        ${address.apartment ? `<p>Кв./офис: ${address.apartment}</p>` : ''}
+                        ${address.entrance ? `<p>Подъезд: ${address.entrance}</p>` : ''}
+                        ${address.floor ? `<p>Этаж: ${address.floor}</p>` : ''}
+                        ${address.intercom ? `<p>Домофон: ${address.intercom}</p>` : ''}
+                    </div>
+                    
+                    <div class="address-footer">
+                        <button class="btn btn-sm ${address.isDefault ? 'btn-outline' : ''}" onclick="setAsDefault(${index})">
+                            ${address.isDefault ? '✓ Основной' : 'Сделать основным'}
+                        </button>
+                        <button class="btn btn-sm btn-outline" onclick="useForOrder(${index})">
+                            Использовать
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function loadDeliverySettings() {
+            const savedUser = localStorage.getItem('vanillaHouseUser');
+            if (!savedUser) return;
+            
+            const user = JSON.parse(savedUser);
+            
+            if (user.deliverySettings) {
+                document.getElementById('preferredTime').value = user.deliverySettings.preferredTime || 'evening';
+                document.getElementById('courierInstructions').value = user.deliverySettings.instructions || '';
+                document.getElementById('smsNotifications').checked = user.deliverySettings.smsNotifications !== false;
+            }
+        }
+        
+        function saveDeliverySettings() {
+            const savedUser = localStorage.getItem('vanillaHouseUser');
+            if (!savedUser) return;
+            
+            const user = JSON.parse(savedUser);
+            
+            user.deliverySettings = {
+                preferredTime: document.getElementById('preferredTime').value,
+                instructions: document.getElementById('courierInstructions').value,
+                smsNotifications: document.getElementById('smsNotifications').checked
+            };
+            
+            localStorage.setItem('vanillaHouseUser', JSON.stringify(user));
+            showNotification('Настройки сохранены!', 'success');
+        }
+        
+        function showAddAddressModal() {
+            document.getElementById('addAddressModal').style.display = 'flex';
+        }
+        
+        function closeAddAddressModal() {
+            document.getElementById('addAddressModal').style.display = 'none';
+            document.getElementById('addAddressForm').reset();
+        }
+        
+        document.getElementById('addAddressForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const savedUser = localStorage.getItem('vanillaHouseUser');
+            if (!savedUser) return;
+            
+            const user = JSON.parse(savedUser);
+            
+            const newAddress = {
+                name: document.getElementById('addressName').value,
+                city: document.getElementById('city').value,
+                street: document.getElementById('street').value,
+                house: document.getElementById('house').value,
+                apartment: document.getElementById('apartment').value,
+                entrance: document.getElementById('entrance').value,
+                floor: document.getElementById('floor').value,
+                intercom: document.getElementById('intercom').value,
+                isDefault: document.getElementById('setAsDefault').checked || !user.addresses || user.addresses.length === 0
+            };
+            
+            // Если это основной адрес, сбрасываем флаг у остальных
+            if (newAddress.isDefault && user.addresses) {
+                user.addresses.forEach(addr => addr.isDefault = false);
+            }
+            
+            if (!user.addresses) {
+                user.addresses = [];
+            }
+            
+            user.addresses.push(newAddress);
+            localStorage.setItem('vanillaHouseUser', JSON.stringify(user));
+            
+            closeAddAddressModal();
+            loadAddresses();
+            showNotification('Адрес успешно добавлен!', 'success');
+        });
+        
+        function editAddress(index) {
+            const savedUser = localStorage.getItem('vanillaHouseUser');
+            if (!savedUser) return;
+            
+            const user = JSON.parse(savedUser);
+            const address = user.addresses[index];
+            
+            // Заполняем форму данными адреса
+            document.getElementById('addressName').value = address.name;
+            document.getElementById('city').value = address.city;
+            document.getElementById('street').value = address.street;
+            document.getElementById('house').value = address.house;
+            document.getElementById('apartment').value = address.apartment || '';
+            document.getElementById('entrance').value = address.entrance || '';
+            document.getElementById('floor').value = address.floor || '';
+            document.getElementById('intercom').value = address.intercom || '';
+            document.getElementById('setAsDefault').checked = address.isDefault;
+            
+            // Удаляем старый адрес
+            user.addresses.splice(index, 1);
+            localStorage.setItem('vanillaHouseUser', JSON.stringify(user));
+            
+            showAddAddressModal();
+        }
+        
+        function deleteAddress(index) {
+            if (!confirm('Удалить этот адрес?')) return;
+            
+            const savedUser = localStorage.getItem('vanillaHouseUser');
+            if (!savedUser) return;
+            
+            const user = JSON.parse(savedUser);
+            
+            const wasDefault = user.addresses[index].isDefault;
+            user.addresses.splice(index, 1);
+            
+            // Если удалили основной адрес, назначаем новый (первый в списке)
+            if (wasDefault && user.addresses.length > 0) {
+                user.addresses[0].isDefault = true;
+            }
+            
+            localStorage.setItem('vanillaHouseUser', JSON.stringify(user));
+            loadAddresses();
+            showNotification('Адрес удален', 'success');
+        }
+        
+        function setAsDefault(index) {
+            const savedUser = localStorage.getItem('vanillaHouseUser');
+            if (!savedUser) return;
+            
+            const user = JSON.parse(savedUser);
+            
+            // Сбрасываем флаг у всех адресов
+            user.addresses.forEach(addr => addr.isDefault = false);
+            
+            // Устанавливаем флаг выбранному адресу
+            user.addresses[index].isDefault = true;
+            
+            localStorage.setItem('vanillaHouseUser', JSON.stringify(user));
+            loadAddresses();
+            showNotification('Основной адрес изменен', 'success');
+        }
+        
+        function useForOrder(index) {
+            showNotification('Адрес выбран для следующего заказа!', 'success');
+            // Здесь можно добавить логику для использования адреса в заказе
+        }
+        
+        // Выход из системы
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Вы действительно хотите выйти?')) {
+                localStorage.removeItem('vanillaHouseUser');
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>

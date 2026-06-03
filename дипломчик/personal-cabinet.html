@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет | Ванильный дом</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #7B3F00;
+            --secondary-color: #D4A76A;
+            --accent-color: #FF9E6D;
+            --light-bg: #FFFDF5;
+            --text-dark: #3A2615;
+            --text-light: #8B7355;
+            --border-radius: 20px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background-color: var(--light-bg);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 6rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            color: var(--primary-color);
+            position: relative;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 5px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: rgba(255, 253, 245, 0.95);
+            color: var(--text-dark);
+            padding: 1.2rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            padding: 0.8rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--secondary-color);
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo:hover .logo-img {
+            transform: rotate(15deg) scale(1.1);
+            border-color: var(--accent-color);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--accent-color);
+            transition: var(--transition);
+            border-radius: 3px;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:hover {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        /* ===== AUTH SECTION ===== */
+        .auth-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                        url('https://alterainvest.ru/upload/iblock/36c/tf734tqilrk8vqt39vdiccry3antrdcr.jpg') center/cover no-repeat;
+            padding: 2rem;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            box-shadow: var(--shadow-hover);
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+        }
+
+        .close-auth {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-auth:hover {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .auth-tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+
+        .auth-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .auth-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .auth-form .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-family: inherit;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .auth-form .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(212, 167, 106, 0.2);
+        }
+
+        .auth-submit {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        /* ===== PERSONAL CABINET ===== */
+        .personal-cabinet {
+            display: none;
+            padding: 6rem 0;
+            min-height: 100vh;
+        }
+
+        .personal-cabinet.active {
+            display: block;
+        }
+
+        .cabinet-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .cabinet-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .cabinet-tab {
+            padding: 12px 25px;
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            color: var(--primary-color);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .cabinet-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .cabinet-tab.active, .cabinet-tab:hover {
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .cabinet-tab.active::before, .cabinet-tab:hover::before {
+            width: 100%;
+        }
+
+        .cabinet-content {
+            display: none;
+        }
+
+        .cabinet-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .profile-info {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .profile-field {
+            display: flex;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+
+        .profile-label {
+            width: 150px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .profile-value {
+            flex: 1;
+            color: var(--text-dark);
+        }
+
+        .profile-edit-btn {
+            margin-top: 1rem;
+        }
+
+        .orders-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .order-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .order-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-number {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .order-date {
+            color: var(--text-light);
+        }
+
+        .order-status {
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-completed {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+        }
+
+        .status-pending {
+            background: rgba(255, 152, 0, 0.1);
+            color: #FF9800;
+        }
+
+        .status-cancelled {
+            background: rgba(244, 67, 54, 0.1);
+            color: #F44336;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+        }
+
+        .order-items {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .order-item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .order-total {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            text-align: right;
+            margin-top: 1rem;
+        }
+
+        .bonus-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .bonus-amount {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 1rem 0;
+        }
+
+        .bonus-description {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .bonus-history {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .bonus-history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .bonus-history-item:last-child {
+            border-bottom: none;
+        }
+
+        .bonus-positive {
+            color: #4CAF50;
+            font-weight: 600;
+        }
+
+        .bonus-negative {
+            color: #F44336;
+            font-weight: 600;
+        }
+
+        .addresses-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .address-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .address-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .address-default {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .address-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .promotions-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .promotion-item {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .promotion-item:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .promotion-img {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .promotion-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .promotion-item:hover .promotion-img img {
+            transform: scale(1.1);
+        }
+
+        .promotion-content {
+            padding: 1.5rem;
+        }
+
+        .promotion-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .promotion-desc {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .promotion-date {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 8px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 5rem 0 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-bottom: 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-column h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1.8rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-links a i {
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+            padding-left: 5px;
+        }
+
+        .footer-links a:hover i {
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+
+        .social-link:hover {
+            background: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        .subscribe-form {
+            margin-top: 1.5rem;
+        }
+
+        .subscribe-form .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .subscribe-form .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .subscribe-form .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .subscribe-form .form-control:focus {
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 992px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                padding: 1.5rem 0;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                gap: 0;
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            nav ul li {
+                padding: 0.8rem 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .promotions-list {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .auth-container {
+                padding: 2rem;
+            }
+
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="https://psv4.userapi.com/s/v1/d2/Vgm_zT2yDUU5r16TuH-ECm51SRnVj6TGqm5x1YXPyC0j9X26UfP2cd3_gVw-6ReEnJ1BUOCJlp1RrkR9zwFDXtngwMxsj_GgnkBRhXWV4MC03FSYKL3ySq3-UDkLzCsnjg48scr10vnY/diplom_2.png" alt="Логотип Ванильный дом" class="logo-img">
+                <span>Ванильный дом</span>
+            </a>
+            <nav>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="index.html#about">О нас</a></li>
+                    <li><a href="index.html#menu">Меню</a></li>
+                    <li><a href="index.html#gallery">Галерея</a></li>
+                    <li><a href="index.html#testimonials">Отзывы</a></li>
+                    <li><a href="index.html#contact">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Auth Section -->
+    <section class="auth-section" id="authSection">
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login">Вход</div>
+                <div class="auth-tab" data-tab="register">Регистрация</div>
+            </div>
+            
+            <form class="auth-form active" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль</label>
+                    <input type="password" id="loginPassword" class="form-control" required>
+                </div>
+                <button type="submit" class="btn auth-submit">Войти</button>
+            </form>
+            
+            <form class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Имя</label>
+                    <input type="text" id="registerName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPhone">Телефон</label>
+                    <input type="tel" id="registerPhone" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Пароль</label>
+                    <input type="password" id="registerPassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Подтвердите пароль</label>
+                    <input type="password" id="registerConfirmPassword" class="form-control" required>
+                </div>
+                <button type="submit" class="btn auth-submit">Зарегистрироваться</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Personal Cabinet -->
+    <section class="personal-cabinet" id="personalCabinet">
+        <div class="container">
+            <button class="logout-btn" id="logoutBtn">Выйти</button>
+            <div class="cabinet-header">
+                <h2 class="section-title">Личный кабинет</h2>
+                <p class="menu-subtitle">Управляйте своими заказами и бонусами</p>
+            </div>
+            
+            <div class="cabinet-tabs">
+                <div class="cabinet-tab active" data-tab="profile">Профиль</div>
+                <div class="cabinet-tab" data-tab="orders">История заказов</div>
+                <div class="cabinet-tab" data-tab="bonuses">Бонусы</div>
+                <div class="cabinet-tab" data-tab="addresses">Адреса доставки</div>
+                <div class="cabinet-tab" data-tab="promotions">Акции</div>
+            </div>
+            
+            <div class="cabinet-content active" id="profileContent">
+                <div class="profile-info">
+                    <div class="profile-field">
+                        <div class="profile-label">Имя:</div>
+                        <div class="profile-value" id="profileName"></div>
+                    </div>
+                    <div class="profile-field">
+                        <div class="profile-label">Email:</div>
+                        <div class="profile-value" id="profileEmail"></div>
+                    </div>
+                    <div class="profile-field">
+                        <div class="profile-label">Телефон:</div>
+                        <div class="profile-value" id="profilePhone"></div>
+                    </div>
+                    <div class="profile-field">
+                        <div class="profile-label">Дата регистрации:</div>
+                        <div class="profile-value" id="profileRegDate"></div>
+                    </div>
+                    <button class="btn profile-edit-btn">Редактировать профиль</button>
+                </div>
+            </div>
+            
+            <div class="cabinet-content" id="ordersContent">
+                <div class="orders-list" id="ordersList">
+                    <!-- Заказы будут добавляться динамически -->
+                </div>
+            </div>
+            
+            <div class="cabinet-content" id="bonusesContent">
+                <div class="bonus-card">
+                    <h3>Ваши бонусы</h3>
+                    <div class="bonus-amount" id="bonusAmount">0</div>
+                    <p class="bonus-description">1 бонус = 1 рубль. Используйте бонусы для оплаты заказов!</p>
+                    <button class="btn">Как получить бонусы?</button>
+                </div>
+                
+                <div class="bonus-history">
+                    <h3>История начислений</h3>
+                    <div id="bonusHistory">
+                        <!-- История бонусов будет добавляться динамически -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cabinet-content" id="addressesContent">
+                <div class="addresses-list" id="addressesList">
+                    <!-- Адреса будут добавляться динамически -->
+                </div>
+                <button class="btn" style="margin-top: 2rem;" id="addAddressBtn">Добавить адрес</button>
+            </div>
+            
+            <div class="cabinet-content" id="promotionsContent">
+                <div class="promotions-list" id="promotionsList">
+                    <!-- Акции будут добавляться динамически -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Ванильный дом</h3>
+                    <p>Кондитерская, где каждый десерт создается с любовью и вниманием к деталям. Мы делаем ваши моменты слаще!</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-vk"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Быстрые ссылки</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Главная</a></li>
+                        <li><a href="index.html#about"><i class="fas fa-chevron-right"></i> О нас</a></li>
+                        <li><a href="index.html#menu"><i class="fas fa-chevron-right"></i> Меню</a></li>
+                        <li><a href="index.html#gallery"><i class="fas fa-chevron-right"></i> Галерея</a></li>
+                        <li><a href="index.html#testimonials"><i class="fas fa-chevron-right"></i> Отзывы</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Подписка</h3>
+                    <p>Подпишитесь на нашу рассылку, чтобы первыми узнавать о новых десертах и акциях.</p>
+                    <form class="subscribe-form">
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Ваш email" required>
+                        </div>
+                        <button type="submit" class="btn">Подписаться</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Ванильный дом. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Проверяем, авторизован ли пользователь при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            
+            // Mobile Menu Toggle
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navMenu = document.querySelector('nav ul');
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                mobileMenuBtn.innerHTML = navMenu.classList.contains('active') 
+                    ? '<i class="fas fa-times"></i>' 
+                    : '<i class="fas fa-bars"></i>';
+            });
+            
+            // Header scroll effect
+            window.addEventListener('scroll', function() {
+                const header = document.getElementById('header');
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+        });
+        
+        // Переменные для авторизации
+        const authSection = document.getElementById('authSection');
+        const personalCabinet = document.getElementById('personalCabinet');
+        const logoutBtn = document.getElementById('logoutBtn');
+        
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const authForms = document.querySelectorAll('.auth-form');
+        
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        
+        const cabinetTabs = document.querySelectorAll('.cabinet-tab');
+        const cabinetContents = document.querySelectorAll('.cabinet-content');
+        
+        // Функция проверки статуса авторизации
+        function checkAuthStatus() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (user) {
+                // Пользователь авторизован
+                authSection.style.display = 'none';
+                personalCabinet.classList.add('active');
+                
+                // Загружаем данные пользователя
+                loadUserData(user);
+            } else {
+                // Пользователь не авторизован
+                authSection.style.display = 'flex';
+                personalCabinet.classList.remove('active');
+            }
+        }
+        
+        // Функция загрузки данных пользователя
+        function loadUserData(user) {
+            // Заполняем профиль
+            document.getElementById('profileName').textContent = user.name;
+            document.getElementById('profileEmail').textContent = user.email;
+            document.getElementById('profilePhone').textContent = user.phone;
+            document.getElementById('profileRegDate').textContent = new Date(user.registrationDate).toLocaleDateString('ru-RU');
+            
+            // Загружаем заказы
+            loadOrders(user.id);
+            
+            // Загружаем бонусы
+            loadBonuses(user.id);
+            
+            // Загружаем адреса
+            loadAddresses(user.id);
+            
+            // Загружаем акции
+            loadPromotions();
+        }
+        
+        // Функция загрузки заказов
+        function loadOrders(userId) {
+            const ordersList = document.getElementById('ordersList');
+            ordersList.innerHTML = '';
+            
+            // Получаем заказы из localStorage
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const userOrders = orders.filter(order => order.userId === userId);
+            
+            if (userOrders.length === 0) {
+                ordersList.innerHTML = '<p>У вас пока нет заказов</p>';
+                return;
+            }
+            
+            userOrders.forEach(order => {
+                const orderItem = document.createElement('div');
+                orderItem.className = 'order-item';
+                
+                let statusClass = '';
+                let statusText = '';
+                
+                switch(order.status) {
+                    case 'completed':
+                        statusClass = 'status-completed';
+                        statusText = 'Выполнен';
+                        break;
+                    case 'pending':
+                        statusClass = 'status-pending';
+                        statusText = 'В обработке';
+                        break;
+                    case 'cancelled':
+                        statusClass = 'status-cancelled';
+                        statusText = 'Отменен';
+                        break;
+                }
+                
+                orderItem.innerHTML = `
+                    <div class="order-header">
+                        <div>
+                            <div class="order-number">Заказ #${order.id}</div>
+                            <div class="order-date">${new Date(order.date).toLocaleDateString('ru-RU')}</div>
+                        </div>
+                        <div class="order-status ${statusClass}">${statusText}</div>
+                    </div>
+                    <div class="order-details">
+                        <div class="order-items">
+                            ${order.items.map(item => `
+                                <div class="order-item-row">
+                                    <span>${item.name}</span>
+                                    <span>${item.quantity} x ${item.price} ₽</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="order-total">Итого: ${order.total} ₽</div>
+                    </div>
+                `;
+                
+                ordersList.appendChild(orderItem);
+            });
+        }
+        
+        // Функция загрузки бонусов
+        function loadBonuses(userId) {
+            const bonusAmount = document.getElementById('bonusAmount');
+            const bonusHistory = document.getElementById('bonusHistory');
+            
+            // Получаем бонусы из localStorage
+            const bonuses = JSON.parse(localStorage.getItem('bonuses')) || [];
+            const userBonuses = bonuses.filter(bonus => bonus.userId === userId);
+            
+            // Считаем общее количество бонусов
+            const totalBonuses = userBonuses.reduce((sum, bonus) => sum + bonus.amount, 0);
+            bonusAmount.textContent = totalBonuses;
+            
+            // Заполняем историю бонусов
+            bonusHistory.innerHTML = '';
+            
+            if (userBonuses.length === 0) {
+                bonusHistory.innerHTML = '<p>У вас пока нет истории бонусов</p>';
+                return;
+            }
+            
+            userBonuses.forEach(bonus => {
+                const bonusItem = document.createElement('div');
+                bonusItem.className = 'bonus-history-item';
+                
+                const amountClass = bonus.amount > 0 ? 'bonus-positive' : 'bonus-negative';
+                const amountSign = bonus.amount > 0 ? '+' : '';
+                
+                bonusItem.innerHTML = `
+                    <div>
+                        <div>${bonus.description}</div>
+                        <div class="bonus-date">${new Date(bonus.date).toLocaleDateString('ru-RU')}</div>
+                    </div>
+                    <div class="${amountClass}">${amountSign}${bonus.amount} бонусов</div>
+                `;
+                
+                bonusHistory.appendChild(bonusItem);
+            });
+        }
+        
+        // Функция загрузки адресов
+        function loadAddresses(userId) {
+            const addressesList = document.getElementById('addressesList');
+            addressesList.innerHTML = '';
+            
+            // Получаем адреса из localStorage
+            const addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+            const userAddresses = addresses.filter(address => address.userId === userId);
+            
+            if (userAddresses.length === 0) {
+                addressesList.innerHTML = '<p>У вас пока нет сохраненных адресов</p>';
+                return;
+            }
+            
+            userAddresses.forEach(address => {
+                const addressItem = document.createElement('div');
+                addressItem.className = 'address-item';
+                
+                addressItem.innerHTML = `
+                    ${address.isDefault ? '<div class="address-default">Основной</div>' : ''}
+                    <h3>${address.name}</h3>
+                    <p>${address.street}, ${address.house}</p>
+                    <p>${address.apartment ? `Кв. ${address.apartment}, ` : ''}${address.entrance ? `Подъезд ${address.entrance}, ` : ''}${address.floor ? `Этаж ${address.floor}` : ''}</p>
+                    <p>${address.comment || ''}</p>
+                    <div class="address-actions">
+                        <button class="btn" style="padding: 8px 15px;">Редактировать</button>
+                        ${!address.isDefault ? '<button class="btn btn-secondary" style="padding: 8px 15px;">Сделать основным</button>' : ''}
+                    </div>
+                `;
+                
+                addressesList.appendChild(addressItem);
+            });
+        }
+        
+        // Функция загрузки акций
+        function loadPromotions() {
+            const promotionsList = document.getElementById('promotionsList');
+            promotionsList.innerHTML = '';
+            
+            // Получаем акции из localStorage
+            const promotions = JSON.parse(localStorage.getItem('promotions')) || [];
+            
+            if (promotions.length === 0) {
+                // Если акций нет, создаем демо-акции
+                const demoPromotions = [
+                    {
+                        id: 1,
+                        title: 'Скидка 20% на все торты',
+                        description: 'Только в этом месяце! Получите скидку 20% на все торты в нашем кафе.',
+                        image: 'https://avatars.mds.yandex.net/i?id=924a13781acb787b489d9bad977d5057_l-5340221-images-thumbs&n=13',
+                        date: '2026-01-01 - 2026-01-31'
+                    },
+                    {
+                        id: 2,
+                        title: 'Бесплатный кофе при заказе от 500 ₽',
+                        description: 'При заказе от 500 рублей получите любой кофе в подарок!',
+                        image: 'https://avatars.mds.yandex.net/i?id=c00d1d14c7f1d86a2f017b16b6e9eca6_l-5478998-images-thumbs&n=13',
+                        date: '2026-01-01 - 2026-02-28'
+                    },
+                    {
+                        id: 3,
+                        title: 'День рождения - торт в подарок!',
+                        description: 'В день рождения получите торт "Шоколадный рай" в подарок при заказе от 1000 рублей.',
+                        image: 'https://avatars.dzeninfra.ru/get-zen_doc/1895133/pub_6047bc6ad9fb5535c6924fd1_6047d60f01026b4504440746/scale_1200',
+                        date: '2026-01-01 - 2026-12-31'
+                    }
+                ];
+                
+                localStorage.setItem('promotions', JSON.stringify(demoPromotions));
+                promotions.push(...demoPromotions);
+            }
+            
+            promotions.forEach(promotion => {
+                const promotionItem = document.createElement('div');
+                promotionItem.className = 'promotion-item';
+                
+                promotionItem.innerHTML = `
+                    <div class="promotion-img">
+                        <img src="${promotion.image}" alt="${promotion.title}">
+                    </div>
+                    <div class="promotion-content">
+                        <h3 class="promotion-title">${promotion.title}</h3>
+                        <p class="promotion-desc">${promotion.description}</p>
+                        <p class="promotion-date">${promotion.date}</p>
+                    </div>
+                `;
+                
+                promotionsList.appendChild(promotionItem);
+            });
+        }
+        
+        // Переключение между вкладками авторизации
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.getAttribute('data-tab');
+                switchAuthTab(tabName);
+            });
+        });
+        
+        function switchAuthTab(tabName) {
+            // Убираем активный класс со всех вкладок и форм
+            authTabs.forEach(tab => tab.classList.remove('active'));
+            authForms.forEach(form => form.classList.remove('active'));
+            
+            // Добавляем активный класс выбранной вкладке и форме
+            document.querySelector(`.auth-tab[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(`${tabName}Form`).classList.add('active');
+        }
+        
+        // Обработка формы входа
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Получаем пользователей из localStorage
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // Ищем пользователя с таким email и паролем
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                // Сохраняем текущего пользователя
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                // Обновляем интерфейс
+                checkAuthStatus();
+                
+                // Показываем уведомление об успешном входе
+                alert('Успешный вход! Добро пожаловать в личный кабинет!');
+            } else {
+                alert('Неверный email или пароль');
+            }
+        });
+        
+        // Обработка формы регистрации
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const phone = document.getElementById('registerPhone').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            // Проверяем, что пароли совпадают
+            if (password !== confirmPassword) {
+                alert('Пароли не совпадают');
+                return;
+            }
+            
+            // Получаем пользователей из localStorage
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // Проверяем, нет ли уже пользователя с таким email
+            if (users.find(u => u.email === email)) {
+                alert('Пользователь с таким email уже существует');
+                return;
+            }
+            
+            // Создаем нового пользователя
+            const newUser = {
+                id: Date.now(),
+                name,
+                email,
+                phone,
+                password,
+                registrationDate: new Date().toISOString()
+            };
+            
+            // Добавляем пользователя в список
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Сохраняем текущего пользователя
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            
+            // Создаем начальные данные для пользователя
+            initializeUserData(newUser.id);
+            
+            // Обновляем интерфейс
+            checkAuthStatus();
+            
+            // Показываем уведомление об успешной регистрации
+            alert('Регистрация завершена! Добро пожаловать в Ванильный дом!');
+        });
+        
+        // Функция инициализации данных пользователя
+        function initializeUserData(userId) {
+            // Создаем начальные бонусы
+            const bonuses = JSON.parse(localStorage.getItem('bonuses')) || [];
+            bonuses.push({
+                id: Date.now(),
+                userId,
+                amount: 100,
+                description: 'Бонусы за регистрацию',
+                date: new Date().toISOString()
+            });
+            localStorage.setItem('bonuses', JSON.stringify(bonuses));
+            
+            // Создаем демо-заказы
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.push({
+                id: Date.now(),
+                userId,
+                date: new Date().toISOString(),
+                status: 'completed',
+                items: [
+                    { name: 'Шоколадный рай', quantity: 1, price: 450 },
+                    { name: 'Латте с карамелью', quantity: 2, price: 280 }
+                ],
+                total: 1010
+            });
+            localStorage.setItem('orders', JSON.stringify(orders));
+            
+            // Создаем демо-адреса
+            const addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+            addresses.push({
+                id: Date.now(),
+                userId,
+                name: 'Дом',
+                street: 'ул. Сладкая',
+                house: '15',
+                apartment: '25',
+                entrance: '2',
+                floor: '3',
+                comment: 'Код домофона: 25К',
+                isDefault: true
+            });
+            localStorage.setItem('addresses', JSON.stringify(addresses));
+        }
+        
+        // Обработчик выхода из системы
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            checkAuthStatus();
+            alert('Выход выполнен! Вы успешно вышли из системы');
+        });
+        
+        // Переключение между вкладками личного кабинета
+        cabinetTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.getAttribute('data-tab');
+                
+                // Убираем активный класс со всех вкладок и контента
+                cabinetTabs.forEach(t => t.classList.remove('active'));
+                cabinetContents.forEach(c => c.classList.remove('active'));
+                
+                // Добавляем активный класс выбранной вкладке и контенту
+                tab.classList.add('active');
+                document.getElementById(`${tabName}Content`).classList.add('active');
+            });
+        });
+        
+        // Обработчик кнопки добавления адреса
+        document.getElementById('addAddressBtn').addEventListener('click', () => {
+            const userId = JSON.parse(localStorage.getItem('currentUser')).id;
+            const addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+            
+            // Создаем новый адрес
+            const newAddress = {
+                id: Date.now(),
+                userId,
+                name: 'Работа',
+                street: 'ул. Кондитерская',
+                house: '42',
+                apartment: '10',
+                entrance: '1',
+                floor: '5',
+                comment: 'Офис 510',
+                isDefault: false
+            };
+            
+            addresses.push(newAddress);
+            localStorage.setItem('addresses', JSON.stringify(addresses));
+            
+            // Перезагружаем адреса
+            loadAddresses(userId);
+            
+            alert('Адрес добавлен! Новый адрес успешно добавлен');
+        });
+    </script>
+</body>
+</html>

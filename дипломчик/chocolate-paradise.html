@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шоколадный рай - Ванильный дом</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #7B3F00;
+            --secondary-color: #D4A76A;
+            --accent-color: #FF9E6D;
+            --light-bg: #FFFDF5;
+            --text-dark: #3A2615;
+            --text-light: #8B7355;
+            --border-radius: 20px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background-color: var(--light-bg);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 6rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            color: var(--primary-color);
+            position: relative;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 5px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* ===== HEADER & NAVIGATION ===== */
+        header {
+            background: rgba(255, 253, 245, 0.95);
+            color: var(--text-dark);
+            padding: 1.2rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            padding: 0.8rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--secondary-color);
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo:hover .logo-img {
+            transform: rotate(15deg) scale(1.1);
+            border-color: var(--accent-color);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--accent-color);
+            transition: var(--transition);
+            border-radius: 3px;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:hover {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        /* ===== PRODUCT SECTION ===== */
+        .product-hero {
+            padding-top: 120px;
+            background: linear-gradient(135deg, #FFF9F0 0%, #FFFDF5 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .product-gallery {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .product-main-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .product-thumbnails {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .product-thumbnail {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .product-thumbnail.active {
+            border-color: var(--accent-color);
+        }
+
+        .product-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 2rem;
+        }
+
+        .product-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #E91E63, #9C27B0);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .product-price {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .product-description {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .product-details {
+            margin-bottom: 2rem;
+        }
+
+        .product-detail-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .product-detail-icon {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            width: 25px;
+        }
+
+        .product-detail-text {
+            color: var(--text-dark);
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .quantity-btn {
+            width: 50px;
+            height: 50px;
+            background: var(--light-bg);
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .quantity-btn:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .quantity-input {
+            width: 60px;
+            height: 50px;
+            text-align: center;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            background: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            flex: 1;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: rgba(123, 63, 0, 0.1);
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .btn-secondary:hover::before {
+            width: 100%;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(123, 63, 0, 0.05);
+            transform: translateY(-5px);
+        }
+
+        /* ===== ORDER OPTIONS SECTION ===== */
+        .order-options {
+            background: var(--light-bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .order-options::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .order-options-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .order-option {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .order-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            z-index: 2;
+        }
+
+        .order-option:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .order-option-icon {
+            font-size: 3.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .order-option:hover .order-option-icon {
+            color: var(--accent-color);
+            transform: scale(1.2);
+        }
+
+        .order-option-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .order-option-description {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .order-option-price {
+            font-weight: 800;
+            color: var(--secondary-color);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ===== ORDER FORM SECTION ===== */
+        .order-form-section {
+            background: linear-gradient(135deg, #FFF9F0 0%, #FFFDF5 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .order-form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 1;
+        }
+
+        .order-form-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-family: inherit;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(212, 167, 106, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .order-summary {
+            background: var(--light-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .order-summary-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .order-summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .order-summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--secondary-color);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 5rem 0 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-bottom: 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-column h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1.8rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-links a i {
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+            padding-left: 5px;
+        }
+
+        .footer-links a:hover i {
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+
+        .social-link:hover {
+            background: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        .subscribe-form {
+            margin-top: 1.5rem;
+        }
+
+        .subscribe-form .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .subscribe-form .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .subscribe-form .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .subscribe-form .form-control:focus {
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== BACK TO TOP BUTTON ===== */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--primary-color);
+            transform: translateY(-5px);
+        }
+
+        /* ===== NOTIFICATION ===== */
+        .notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            z-index: 3000;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .notification.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .notification-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2999;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .notification-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .notification-icon {
+            font-size: 4rem;
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .notification-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .notification-text {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .notification-btn {
+            margin-top: 1.5rem;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 992px) {
+            .product-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .order-options-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                padding: 1.5rem 0;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                gap: 0;
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            nav ul li {
+                padding: 0.8rem 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .product-actions {
+                flex-direction: column;
+            }
+            
+            .order-options-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .order-form-container {
+                padding: 2rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .product-title {
+                font-size: 2rem;
+            }
+            
+            .order-form-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="https://psv4.userapi.com/s/v1/d2/Vgm_zT2yDUU5r16TuH-ECm51SRnVj6TGqm5x1YXPyC0j9X26UfP2cd3_gVw-6ReEnJ1BUOCJlp1RrkR9zwFDXtngwMxsj_GgnkBRhXWV4MC03FSYKL3ySq3-UDkLzCsnjg48scr10vnY/diplom_2.png" alt="Логотип Ванильный дом" class="logo-img">
+                <span>Ванильный дом</span>
+            </a>
+            <nav>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="index.html#menu">Меню</a></li>
+                    <li><a href="index.html#gallery">Галерея</a></li>
+                    <li><a href="index.html#contact">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Product Hero Section -->
+    <section class="product-hero">
+        <div class="container">
+            <div class="product-container">
+                <div class="product-gallery">
+                    <img src="https://avatars.dzeninfra.ru/get-zen_doc/1895133/pub_6047bc6ad9fb5535c6924fd1_6047d60f01026b4504440746/scale_1200" alt="Шоколадный рай" class="product-main-image" id="mainImage">
+                    
+                </div>
+                <div class="product-info">
+                    <div class="product-badge">Хит продаж</div>
+                    <h1 class="product-title">Шоколадный рай</h1>
+                    <div class="product-price">450 ₽</div>
+                    <p class="product-description">Нежнейший шоколадный торт с карамельной прослойкой и шоколадным ганашем. Идеальное сочетание насыщенного вкуса и нежной текстуры. Каждый кусочек этого торта подарит вам незабываемые ощущения настоящего шоколадного наслаждения.</p>
+                    
+                    <div class="product-details">
+                        <div class="product-detail-item">
+                            <i class="fas fa-weight product-detail-icon"></i>
+                            <span class="product-detail-text">Вес: 1.2 кг (8-10 порций)</span>
+                        </div>
+                        <div class="product-detail-item">
+                            <i class="fas fa-clock product-detail-icon"></i>
+                            <span class="product-detail-text">Время приготовления: 2-3 часа</span>
+                        </div>
+                        <div class="product-detail-item">
+                            <i class="fas fa-leaf product-detail-icon"></i>
+                            <span class="product-detail-text">Натуральные ингредиенты</span>
+                        </div>
+                        <div class="product-detail-item">
+                            <i class="fas fa-star product-detail-icon"></i>
+                            <span class="product-detail-text">Рейтинг: 4.8/5 (128 отзывов)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="product-actions">
+                        <div class="quantity-selector">
+                            <button class="quantity-btn" id="decreaseQuantity">-</button>
+                            <input type="number" class="quantity-input" id="quantity" value="1" min="1" max="10">
+                            <button class="quantity-btn" id="increaseQuantity">+</button>
+                        </div>
+                        <button class="btn btn-primary" id="addToCart">
+                            <i class="fas fa-shopping-cart"></i> Добавить в корзину
+                        </button>
+                    </div>
+                    
+                    <button class="btn btn-secondary" id="orderNow">
+                        <i class="fas fa-bolt"></i> Заказать сейчас
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Order Options Section -->
+    <section class="order-options">
+        <div class="container">
+            <h2 class="section-title">Способы получения</h2>
+            <div class="order-options-container">
+                <div class="order-option">
+                    <i class="fas fa-store order-option-icon"></i>
+                    <h3 class="order-option-title">Самовывоз</h3>
+                    <p class="order-option-description">Заберите ваш заказ в нашей кондитерской в удобное для вас время.</p>
+                    <div class="order-option-price">Бесплатно</div>
+                    <button class="btn" data-option="pickup">Выбрать</button>
+                </div>
+                
+                <div class="order-option">
+                    <i class="fas fa-car order-option-icon"></i>
+                    <h3 class="order-option-title">Доставка курьером</h3>
+                    <p class="order-option-description">Быстрая доставка прямо к вашей двери в течение 2 часов.</p>
+                    <div class="order-option-price">от 200 ₽</div>
+                    <button class="btn" data-option="delivery">Выбрать</button>
+                </div>
+                
+                <div class="order-option">
+                    <i class="fas fa-bicycle order-option-icon"></i>
+                    <h3 class="order-option-title">Экспресс-доставка</h3>
+                    <p class="order-option-description">Срочная доставка в течение 1 часа по центральным районам города.</p>
+                    <div class="order-option-price">от 350 ₽</div>
+                    <button class="btn" data-option="express">Выбрать</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Order Form Section -->
+    <section class="order-form-section" id="orderForm">
+        <div class="container">
+            <h2 class="section-title">Оформление заказа</h2>
+            <div class="order-form-container">
+                <h3 class="order-form-title">Ваши данные для заказа</h3>
+                <form id="orderForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Ваше имя *</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Телефон *</label>
+                            <input type="tel" id="phone" class="form-control" required placeholder="+7 (XXX) XXX-XX-XX">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="deliveryOption">Способ получения *</label>
+                        <select id="deliveryOption" class="form-control" required>
+                            <option value="">Выберите способ получения</option>
+                            <option value="pickup">Самовывоз (бесплатно)</option>
+                            <option value="delivery">Доставка курьером (от 200 ₽)</option>
+                            <option value="express">Экспресс-доставка (от 350 ₽)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="addressField" style="display: none;">
+                        <label for="address">Адрес доставки *</label>
+                        <input type="text" id="address" class="form-control" placeholder="Улица, дом, квартира">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date">Дата получения *</label>
+                        <input type="date" id="date" class="form-control" required min="2026-01-01" max="2026-12-31">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="time">Время получения *</label>
+                        <input type="text" id="time" class="form-control" required placeholder="09:54" maxlength="5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Дополнительные пожелания</label>
+                        <textarea id="message" class="form-control" placeholder="Например: позвонить за 15 минут до доставки"></textarea>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <h4 class="order-summary-title">Ваш заказ</h4>
+                        <div class="order-summary-item">
+                            <span>Шоколадный рай x <span id="summaryQuantity">1</span></span>
+                            <span id="summaryProductPrice">450 ₽</span>
+                        </div>
+                        <div class="order-summary-item" id="deliveryCostItem" style="display: none;">
+                            <span>Доставка</span>
+                            <span id="deliveryCost">0 ₽</span>
+                        </div>
+                        <div class="order-summary-total">
+                            <span>Итого:</span>
+                            <span id="totalCost">450 ₽</span>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 2rem;">
+                        <i class="fas fa-check-circle"></i> Подтвердить заказ
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Ванильный дом</h3>
+                    <p>Кондитерская, где каждый десерт создается с любовью и вниманием к деталям. Мы делаем ваши моменты слаще!</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-vk"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Быстрые ссылки</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Главная</a></li>
+                        <li><a href="index.html#menu"><i class="fas fa-chevron-right"></i> Меню</a></li>
+                        <li><a href="index.html#gallery"><i class="fas fa-chevron-right"></i> Галерея</a></li>
+                        <li><a href="index.html#testimonials"><i class="fas fa-chevron-right"></i> Отзывы</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Подписка</h3>
+                    <p>Подпишитесь на нашу рассылку, чтобы первыми узнавать о новых десертах и акциях.</p>
+                    <form class="subscribe-form">
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Ваш email" required>
+                        </div>
+                        <button type="submit" class="btn">Подписаться</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Ванильный дом. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+
+    <!-- Notification -->
+    <div class="notification-overlay" id="notificationOverlay"></div>
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle notification-icon"></i>
+        <h2 class="notification-title">Заказ подтвержден!</h2>
+        <p class="notification-text">Спасибо за ваш заказ! Мы свяжемся с вами в ближайшее время для подтверждения деталей.</p>
+        <button class="btn notification-btn" id="closeNotification">Понятно</button>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navMenu = document.querySelector('nav ul');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navMenu.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+
+            // Back to top button
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.scrollY > 500) {
+                backToTop.classList.add('active');
+            } else {
+                backToTop.classList.remove('active');
+            }
+        });
+        
+        // Product Gallery
+        const mainImage = document.getElementById('mainImage');
+        const thumbnails = document.querySelectorAll('.product-thumbnail');
+        
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', () => {
+                const imageSrc = thumbnail.getAttribute('data-image');
+                mainImage.src = imageSrc;
+                
+                // Update active thumbnail
+                thumbnails.forEach(t => t.classList.remove('active'));
+                thumbnail.classList.add('active');
+            });
+        });
+        
+        // Quantity Selector
+        const quantityInput = document.getElementById('quantity');
+        const decreaseBtn = document.getElementById('decreaseQuantity');
+        const increaseBtn = document.getElementById('increaseQuantity');
+        
+        decreaseBtn.addEventListener('click', () => {
+            let value = parseInt(quantityInput.value);
+            if (value > 1) {
+                quantityInput.value = value - 1;
+                updateOrderSummary();
+            }
+        });
+        
+        increaseBtn.addEventListener('click', () => {
+            let value = parseInt(quantityInput.value);
+            if (value < 10) {
+                quantityInput.value = value + 1;
+                updateOrderSummary();
+            }
+        });
+        
+        quantityInput.addEventListener('change', () => {
+            let value = parseInt(quantityInput.value);
+            if (value < 1) quantityInput.value = 1;
+            if (value > 10) quantityInput.value = 10;
+            updateOrderSummary();
+        });
+        
+        // Order Options
+        const orderOptionButtons = document.querySelectorAll('.order-option .btn');
+        const deliveryOptionSelect = document.getElementById('deliveryOption');
+        const addressField = document.getElementById('addressField');
+        
+        orderOptionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const option = button.getAttribute('data-option');
+                deliveryOptionSelect.value = option;
+                
+                // Scroll to order form
+                document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth' });
+                
+                // Update form based on delivery option
+                updateDeliveryOption();
+            });
+        });
+        
+        deliveryOptionSelect.addEventListener('change', updateDeliveryOption);
+        
+        function updateDeliveryOption() {
+            const option = deliveryOptionSelect.value;
+            
+            if (option === 'pickup') {
+                addressField.style.display = 'none';
+                document.getElementById('address').required = false;
+                updateOrderSummary();
+            } else {
+                addressField.style.display = 'block';
+                document.getElementById('address').required = true;
+                updateOrderSummary();
+            }
+        }
+        
+        // Order Summary
+        function updateOrderSummary() {
+            const quantity = parseInt(quantityInput.value);
+            const productPrice = 450;
+            const deliveryOption = deliveryOptionSelect.value;
+            
+            let deliveryCost = 0;
+            if (deliveryOption === 'delivery') {
+                deliveryCost = 200;
+            } else if (deliveryOption === 'express') {
+                deliveryCost = 350;
+            }
+            
+            const totalCost = (productPrice * quantity) + deliveryCost;
+            
+            document.getElementById('summaryQuantity').textContent = quantity;
+            document.getElementById('summaryProductPrice').textContent = (productPrice * quantity) + ' ₽';
+            
+            if (deliveryCost > 0) {
+                document.getElementById('deliveryCostItem').style.display = 'flex';
+                document.getElementById('deliveryCost').textContent = deliveryCost + ' ₽';
+            } else {
+                document.getElementById('deliveryCostItem').style.display = 'none';
+            }
+            
+            document.getElementById('totalCost').textContent = totalCost + ' ₽';
+        }
+        
+        // Initialize order summary
+        updateOrderSummary();
+        
+        // Time Mask
+        const timeInput = document.getElementById('time');
+        
+        timeInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^\d:]/g, '');
+            
+            // Удаляем лишние символы
+            if (value.length > 5) {
+                value = value.substring(0, 5);
+            }
+            
+            // Автоматически добавляем двоеточие после 2 цифр
+            if (value.length === 2 && !value.includes(':')) {
+                value = value + ':';
+            }
+            
+            // Проверяем и корректируем часы и минуты
+            if (value.length >= 2) {
+                let hours = value.split(':')[0];
+                if (hours > 23) {
+                    hours = '23';
+                }
+                
+                if (value.length >= 4) {
+                    let minutes = value.split(':')[1] || '';
+                    if (minutes > 59) {
+                        minutes = '59';
+                    }
+                    value = hours + ':' + minutes;
+                } else {
+                    value = hours + (value.length > 2 ? ':' : '');
+                }
+            }
+            
+            e.target.value = value;
+        });
+        
+        timeInput.addEventListener('blur', function(e) {
+            let value = e.target.value;
+            if (value.length === 4 && value.includes(':')) {
+                // Добавляем ведущий ноль для минут
+                const parts = value.split(':');
+                if (parts[1].length === 1) {
+                    e.target.value = parts[0] + ':0' + parts[1];
+                }
+            }
+        });
+        
+        // Phone Mask
+        const phoneInput = document.getElementById('phone');
+        
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            // Если номер начинается с 7, оставляем её как часть номера
+            if (value.startsWith('7')) {
+                value = value.substring(1); // Убираем 7, так как она уже в префиксе
+            }
+            
+            // Форматирование оставшихся 10 цифр
+            if (value.length > 0) {
+                value = value.substring(0, 10);
+                let formattedValue = '';
+                
+                if (value.length > 0) {
+                    formattedValue = '(' + value.substring(0, 3);
+                }
+                if (value.length >= 4) {
+                    formattedValue += ') ' + value.substring(3, 6);
+                }
+                if (value.length >= 7) {
+                    formattedValue += '-' + value.substring(6, 8);
+                }
+                if (value.length >= 9) {
+                    formattedValue += '-' + value.substring(8, 10);
+                }
+                
+                e.target.value = formattedValue;
+            } else {
+                e.target.value = '';
+            }
+        });
+        
+        // Order Now Button
+        const orderNowBtn = document.getElementById('orderNow');
+        
+        orderNowBtn.addEventListener('click', () => {
+            document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        // Add to Cart Button
+        const addToCartBtn = document.getElementById('addToCart');
+        
+        addToCartBtn.addEventListener('click', () => {
+            // In a real application, this would add the product to a shopping cart
+            alert('Торт "Шоколадный рай" добавлен в корзину!');
+        });
+        
+        // Notification
+        const notification = document.getElementById('notification');
+        const notificationOverlay = document.getElementById('notificationOverlay');
+        const closeNotification = document.getElementById('closeNotification');
+        const orderForm = document.getElementById('orderForm');
+        
+        function showNotification() {
+            notification.classList.add('active');
+            notificationOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function hideNotification() {
+            notification.classList.remove('active');
+            notificationOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        closeNotification.addEventListener('click', hideNotification);
+        notificationOverlay.addEventListener('click', hideNotification);
+        
+        // Form Submission
+        orderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Validate phone number
+            const phoneValue = phoneInput.value.replace(/\D/g, '');
+            if (phoneValue.length !== 10) {
+                alert('Пожалуйста, введите корректный номер телефона (10 цифр)');
+                return;
+            }
+            
+            // Validate time
+            const timeValue = document.getElementById('time').value;
+            if (!timeValue) {
+                alert('Пожалуйста, введите время');
+                return;
+            }
+            
+            // Проверка формата времени
+            const timeRegex = /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/;
+            if (!timeRegex.test(timeValue)) {
+                alert('Пожалуйста, введите время в формате ЧЧ:MM (например, 09:54)');
+                return;
+            }
+            
+            // Show success notification
+            showNotification();
+            
+            // Reset form
+            setTimeout(() => {
+                orderForm.reset();
+                updateOrderSummary();
+            }, 500);
+        });
+        
+        // Back to top button functionality
+        document.querySelector('.back-to-top').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>

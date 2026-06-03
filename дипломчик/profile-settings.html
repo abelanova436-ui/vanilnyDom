@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки профиля - Ванильный дом</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== ОСНОВНЫЕ СТИЛИ ЛК ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #7B3F00;
+            --secondary-color: #D4A76A;
+            --accent-color: #FF9E6D;
+            --light-bg: #FFFDF5;
+            --text-dark: #3A2615;
+            --text-light: #8B7355;
+            --border-radius: 20px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .profile-sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 30px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .back-to-site {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .user-details h3 {
+            margin-bottom: 5px;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .user-details p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .user-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #FFF9F0;
+            color: var(--primary-color);
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .sidebar-nav a:hover {
+            background: #f8f9fa;
+            color: var(--primary-color);
+        }
+
+        .sidebar-nav li.active a {
+            background: linear-gradient(90deg, rgba(123, 63, 0, 0.1), transparent);
+            color: var(--primary-color);
+            border-right: 3px solid var(--primary-color);
+        }
+
+        .sidebar-nav a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .badge {
+            margin-left: auto;
+            background: var(--accent-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .bonus-badge {
+            background: var(--secondary-color);
+        }
+
+        .new-badge {
+            background: #10B981;
+        }
+
+        .divider {
+            height: 1px;
+            background: #eee;
+            margin: 20px 0;
+        }
+
+        /* Sidebar Footer */
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .loyalty-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+        }
+
+        .loyalty-progress {
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: white;
+            border-radius: 3px;
+            width: 65%;
+        }
+
+        .loyalty-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .loyalty-level {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .profile-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+            max-width: calc(100% - 280px);
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .content-header h1 {
+            color: var(--primary-color);
+            font-size: 2.2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline::before {
+            display: none;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #EF4444, #F87171);
+        }
+
+        .btn-danger:hover::before {
+            background: linear-gradient(135deg, #F87171, #FCA5A5);
+        }
+
+        /* Sections */
+        .section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        /* Settings Tabs */
+        .settings-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .settings-tab {
+            padding: 12px 25px;
+            background: #f8f9fa;
+            border: 1px solid #eee;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .settings-tab.active,
+        .settings-tab:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Settings Content */
+        .settings-content {
+            display: none;
+        }
+
+        .settings-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-family: inherit;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(212, 167, 106, 0.2);
+        }
+
+        .form-text {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Avatar Upload */
+        .avatar-upload {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--secondary-color);
+            position: relative;
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-upload-btn {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .avatar-upload-btn input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Notification Settings */
+        .notification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-info h4 {
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .notification-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Switch Toggle */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: var(--transition);
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        /* Privacy Settings */
+        .privacy-item {
+            margin-bottom: 25px;
+        }
+
+        .privacy-item h4 {
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .privacy-options {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .privacy-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .privacy-option input {
+            margin: 0;
+        }
+
+        /* Danger Zone */
+        .danger-zone {
+            border: 2px solid #FEE2E2;
+            background: #FEF2F2;
+            border-radius: var(--border-radius);
+            padding: 30px;
+        }
+
+        .danger-zone h3 {
+            color: #991B1B;
+            margin-bottom: 15px;
+        }
+
+        .danger-zone p {
+            color: #991B1B;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px 25px;
+            box-shadow: var(--shadow-hover);
+            display: none;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.success {
+            border-left-color: #10B981;
+        }
+
+        .notification.error {
+            border-left-color: #EF4444;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .profile-sidebar {
+                width: 250px;
+            }
+            
+            .profile-content {
+                margin-left: 250px;
+                max-width: calc(100% - 250px);
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .profile-sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+            }
+            
+            .profile-content {
+                margin-left: 0;
+                max-width: 100%;
+            }
+            
+            .avatar-upload {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .settings-tabs {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-content {
+                padding: 20px 15px;
+            }
+            
+            .content-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .notification-item {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="profile-sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="back-to-site">
+                <i class="fas fa-arrow-left"></i> На сайт
+            </a>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">А</div>
+                <div class="user-details">
+                    <h3 id="userName">Анна Петрова</h3>
+                    <p id="userEmail">anna@example.com</p>
+                    <span class="user-status"><i class="fas fa-crown"></i> Gold статус</span>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="profile-index.html">
+                        <i class="fas fa-home"></i>
+                        <span>Обзор</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile-orders.html">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>Мои заказы</span>
+                        <span class="badge" id="ordersCount">5</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile-bonuses.html">
+                        <i class="fas fa-gift"></i>
+                        <span>Бонусы</span>
+                        <span class="badge bonus-badge" id="bonusesCount">150</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile-addresses.html">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Адреса</span>
+                        <span class="badge" id="addressesCount">2</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile-promotions.html">
+                        <i class="fas fa-percentage"></i>
+                        <span>Акции</span>
+                        <span class="badge new-badge">3</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="profile-settings.html">
+                        <i class="fas fa-cog"></i>
+                        <span>Настройки</span>
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="#" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Выйти</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="loyalty-card">
+                <div class="loyalty-progress">
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                    <span>До следующего уровня: 350 ₽</span>
+                </div>
+                <div class="loyalty-info">
+                    <div class="loyalty-level">
+                        <i class="fas fa-crown"></i>
+                        <span>Gold</span>
+                    </div>
+                    <div class="loyalty-benefits">
+                        <small>Скидка 10% · Приоритетная доставка</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="profile-content">
+        <div class="content-header">
+            <h1>Настройки профиля</h1>
+            <div class="header-actions">
+                <button class="btn" onclick="saveSettings()">
+                    <i class="fas fa-save"></i> Сохранить изменения
+                </button>
+            </div>
+        </div>
+        
+        <!-- Settings Tabs -->
+        <div class="settings-tabs">
+            <button class="settings-tab active" data-tab="profile">Профиль</button>
+            <button class="settings-tab" data-tab="security">Безопасность</button>
+            <button class="settings-tab" data-tab="notifications">Уведомления</button>
+            <button class="settings-tab" data-tab="privacy">Конфиденциальность</button>
+            <button class="settings-tab" data-tab="danger">Опасная зона</button>
+        </div>
+        
+        <!-- Profile Settings -->
+        <div class="section settings-content active" id="profileContent">
+            <div class="section-header">
+                <h2>Личная информация</h2>
+            </div>
+            
+            <div class="avatar-upload">
+                <div class="avatar-preview">
+                    <img src="" alt="Аватар" id="avatarImage">
+                </div>
+                <div class="avatar-upload-btn">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-camera"></i> Изменить фото
+                    </button>
+                    <input type="file" id="avatarUpload" accept="image/*" onchange="previewAvatar(event)">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="firstName">Имя</label>
+                    <input type="text" id="firstName" class="form-control" value="Анна">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="lastName">Фамилия</label>
+                    <input type="text" id="lastName" class="form-control" value="Петрова">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input type="email" id="email" class="form-control" value="anna@example.com">
+                <div class="form-text">На этот email будут приходить уведомления о заказах</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="phone">Телефон</label>
+                <input type="tel" id="phone" class="form-control" value="+7 (999) 123-45-67">
+                <div class="form-text">Используется для связи с курьером</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="birthDate">Дата рождения</label>
+                <input type="date" id="birthDate" class="form-control" value="1990-05-15">
+                <div class="form-text">Получите скидку в день рождения!</div>
+            </div>
+        </div>
+        
+        <!-- Security Settings -->
+        <div class="section settings-content" id="securityContent">
+            <div class="section-header">
+                <h2>Безопасность</h2>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="currentPassword">Текущий пароль</label>
+                <input type="password" id="currentPassword" class="form-control">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="newPassword">Новый пароль</label>
+                    <input type="password" id="newPassword" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="confirmPassword">Подтвердите пароль</label>
+                    <input type="password" id="confirmPassword" class="form-control">
+                </div>
+            </div>
+            
+            <div class="form-text" style="margin-top: 20px;">
+                <i class="fas fa-info-circle"></i> Пароль должен содержать минимум 8 символов, включая цифры и буквы
+            </div>
+            
+            <button class="btn" style="margin-top: 20px;" onclick="changePassword()">
+                <i class="fas fa-key"></i> Изменить пароль
+            </button>
+            
+            <div class="section-header" style="margin-top: 40px; margin-bottom: 20px;">
+                <h3>Двухфакторная аутентификация</h3>
+            </div>
+            
+            <div class="notification-item">
+                <div class="notification-info">
+                    <h4>Включить 2FA</h4>
+                    <p>Дополнительная защита вашего аккаунта</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="twoFactorAuth">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- Notification Settings -->
+        <div class="section settings-content" id="notificationsContent">
+            <div class="section-header">
+                <h2>Уведомления</h2>
+            </div>
+            
+            <div class="notification-item">
+                <div class="notification-info">
+                    <h4>Email уведомления</h4>
+                    <p>Новые заказы, статусы доставки, акции</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="emailNotifications" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="notification-item">
+                <div class="notification-info">
+                    <h4>SMS уведомления</h4>
+                    <p>Уведомления о доставке заказа</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="smsNotifications" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="notification-item">
+                <div class="notification-info">
+                    <h4>Push уведомления</h4>
+                    <p>Уведомления в браузере</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="pushNotifications">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="notification-item">
+                <div class="notification-info">
+                    <h4>Новости и акции</h4>
+                    <p>Уведомления о новых акциях и специальных предложениях</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="promoNotifications" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="notification-item">
+                <div class="notification-info">
+                    <h4>Напоминания</h4>
+                    <p>Напоминания о бронированиях и днях рождения</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="reminderNotifications">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        
+        
+        <!-- Danger Zone -->
+        <div class="section settings-content" id="dangerContent">
+            <div class="section-header">
+                <h2>Опасная зона</h2>
+            </div>
+            
+            <div class="danger-zone">
+                <h3>Удаление аккаунта</h3>
+                <p>Внимание! Это действие нельзя отменить. Все ваши данные, включая историю заказов и бонусы, будут удалены безвозвратно.</p>
+                <button class="btn btn-danger" onclick="deleteAccount()">
+                    <i class="fas fa-trash"></i> Удалить мой аккаунт
+                </button>
+            </div>
+            
+            <div class="danger-zone" style="margin-top: 30px; border-color: #FEF3C7; background: #FFFBEB;">
+                <h3 style="color: #92400E;">Отключение уведомлений</h3>
+                <p style="color: #92400E;">Отключите все уведомления, если они вас беспокоят. Вы можете включить их позже в настройках.</p>
+                <button class="btn" style="background: #F59E0B;" onclick="disableAllNotifications()">
+                    <i class="fas fa-bell-slash"></i> Отключить все уведомления
+                </button>
+            </div>
+            
+            <div class="danger-zone" style="margin-top: 30px; border-color: #E0F2FE; background: #F0F9FF;">
+                <h3 style="color: #075985;">Экспорт данных</h3>
+                <p style="color: #075985;">Скачайте полный архив всех ваших данных в формате JSON.</p>
+                <button class="btn" style="background: #0EA5E9;" onclick="exportData()">
+                    <i class="fas fa-file-export"></i> Экспортировать все данные
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Проверка авторизации
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedUser = localStorage.getItem('vanillaHouseUser');
+            
+            if (!savedUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Загрузка данных пользователя
+            loadUserData();
+            setupTabs();
+            loadSettings();
+        });
+        
+        function loadUserData() {
+            const savedUser = localStorage.getItem('vanillaHouseUser');
+            if (savedUser) {
+                const user = JSON.parse(savedUser);
+                
+                // Обновляем данные на странице
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+                
+                // Заполняем поля формы
+                const nameParts = user.name.split(' ');
+                document.getElementById('firstName').value = nameParts[0] || '';
+                document.getElementById('lastName').value = nameParts[1] || '';
+                document.getElementById('email').value = user.email || '';
+                document.getElementById('phone').value = user.phone || '';
+                document.getElementById('birthDate').value = user.birthDate || '';
+                
+                // Обновляем счетчики
+                document.getElementById('ordersCount').textContent = user.orders || 0;
+                document.getElementById('bonusesCount').textContent = user.bonuses || 0;
+                document.getElementById('addressesCount').textContent = user.addresses ? user.addresses.length : 0;
+            }
+        }
+        
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.settings-tab');
+            const contents = document.querySelectorAll('.settings-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    // Удаляем активный класс со всех вкладок и контента
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+                    
+                    // Добавляем активный класс выбранной вкладке и контенту
+                    this.classList.add('active');
+                    document.getElementById(`${tabName}Content`).classList.add('active');
+                });
+            });
+        }
+        
+        function loadSettings() {
+            const savedSettings = localStorage.getItem('vanillaHouseSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                
+                // Загружаем настройки уведомлений
+                document.getElementById('emailNotifications').checked = settings.emailNotifications !== false;
+                document.getElementById('smsNotifications').checked = settings.smsNotifications !== false;
+                document.getElementById('pushNotifications').checked = settings.pushNotifications || false;
+                document.getElementById('promoNotifications').checked = settings.promoNotifications !== false;
+                document.getElementById('reminderNotifications').checked = settings.reminderNotifications || false;
+                
+                // Загружаем настройки конфиденциальности
+                document.querySelector(`input[name="profileVisibility"][value="${settings.profileVisibility || 'public'}"]`).checked = true;
+                document.querySelector(`input[name="orderHistory"][value="${settings.orderHistory || 'public'}"]`).checked = true;
+                document.getElementById('showReviews').checked = settings.showReviews !== false;
+                document.getElementById('personalizedAds').checked = settings.personalizedAds !== false;
+                document.getElementById('dataCollection').checked = settings.dataCollection !== false;
+                
+                // Двухфакторная аутентификация
+                document.getElementById('twoFactorAuth').checked = settings.twoFactorAuth || false;
+            }
+        }
+        
+        function saveSettings() {
+            const savedUser = localStorage.getItem('vanillaHouseUser');
+            if (!savedUser) return;
+            
+            const user = JSON.parse(savedUser);
+            
+            // Обновляем данные пользователя
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const birthDate = document.getElementById('birthDate').value;
+            
+            user.name = `${firstName} ${lastName}`.trim();
+            user.email = email;
+            user.phone = phone;
+            user.birthDate = birthDate;
+            
+            // Сохраняем пользователя
+            localStorage.setItem('vanillaHouseUser', JSON.stringify(user));
+            
+            // Сохраняем настройки
+            const settings = {
+                emailNotifications: document.getElementById('emailNotifications').checked,
+                smsNotifications: document.getElementById('smsNotifications').checked,
+                pushNotifications: document.getElementById('pushNotifications').checked,
+                promoNotifications: document.getElementById('promoNotifications').checked,
+                reminderNotifications: document.getElementById('reminderNotifications').checked,
+                profileVisibility: document.querySelector('input[name="profileVisibility"]:checked').value,
+                orderHistory: document.querySelector('input[name="orderHistory"]:checked').value,
+                showReviews: document.getElementById('showReviews').checked,
+                personalizedAds: document.getElementById('personalizedAds').checked,
+                dataCollection: document.getElementById('dataCollection').checked,
+                twoFactorAuth: document.getElementById('twoFactorAuth').checked
+            };
+            
+            localStorage.setItem('vanillaHouseSettings', JSON.stringify(settings));
+            
+            // Обновляем данные в сайдбаре
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userEmail').textContent = user.email;
+            document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+            
+            showNotification('Настройки успешно сохранены!', 'success');
+        }
+        
+        function changePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showNotification('Заполните все поля', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showNotification('Пароли не совпадают', 'error');
+                return;
+            }
+            
+            if (newPassword.length < 8) {
+                showNotification('Пароль должен содержать минимум 8 символов', 'error');
+                return;
+            }
+            
+            // Для демо просто показываем успешное сообщение
+            showNotification('Пароль успешно изменен!', 'success');
+            
+            // Очищаем поля
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+        
+        function deleteAccount() {
+            if (confirm('Вы уверены, что хотите удалить свой аккаунт? Это действие нельзя отменить!')) {
+                if (confirm('ВНИМАНИЕ! Все ваши данные будут удалены безвозвратно. Введите "УДАЛИТЬ" для подтверждения:') === 'УДАЛИТЬ') {
+                    localStorage.removeItem('vanillaHouseUser');
+                    localStorage.removeItem('vanillaHouseSettings');
+                    showNotification('Аккаунт удален', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                }
+            }
+        }
+        
+        function disableAllNotifications() {
+            document.getElementById('emailNotifications').checked = false;
+            document.getElementById('smsNotifications').checked = false;
+            document.getElementById('pushNotifications').checked = false;
+            document.getElementById('promoNotifications').checked = false;
+            document.getElementById('reminderNotifications').checked = false;
+            
+            saveSettings();
+            showNotification('Все уведомления отключены', 'success');
+        }
+        
+        function exportData() {
+            const savedUser = localStorage.getItem('vanillaHouseUser');
+            const savedSettings = localStorage.getItem('vanillaHouseSettings');
+            
+            const data = {
+                user: savedUser ? JSON.parse(savedUser) : null,
+                settings: savedSettings ? JSON.parse(savedSettings) : null,
+                exportDate: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `vanilla-house-data-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showNotification('Данные успешно экспортированы', 'success');
+        }
+        
+        function downloadData() {
+            exportData();
+        }
+        
+        function previewAvatar(event) {
+            const input = event.target;
+            const preview = document.getElementById('avatarImage');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    
+                    // Сохраняем аватар в localStorage (для демо)
+                    const savedUser = localStorage.getItem('vanillaHouseUser');
+                    if (savedUser) {
+                        const user = JSON.parse(savedUser);
+                        user.avatar = e.target.result;
+                        localStorage.setItem('vanillaHouseUser', JSON.stringify(user));
+                    }
+                    
+                    showNotification('Аватар успешно обновлен!', 'success');
+                };
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        // Система уведомлений
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'flex';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Выход из системы
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Вы действительно хотите выйти?')) {
+                localStorage.removeItem('vanillaHouseUser');
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>
